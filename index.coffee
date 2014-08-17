@@ -3,13 +3,13 @@ marked = require 'marked'
 async = require 'async'
 request = require 'request'
 _ = require 'lodash'
-secret = require '../secret.json'
 
-module.exports = (options) ->
+# requires 'info'
+
+module.exports = (options = { api_key: '' }) ->
+    { api_key } = options
     processFile = (file, enc, done) ->
         { $ } = file
-        file.videos = 0
-        file.images = 0
 
         isExternal = (i, el) ->
             $el = $ el
@@ -36,7 +36,7 @@ module.exports = (options) ->
             #     &url=#{url}"
             req =
                 url: "http://api.embed.ly/1/oembed\
-                ?key=#{secret.embedly.api_key}\
+                ?key=#{api_key}\
                 &urls=#{ urls.join ',' }\
                 &format=json"
 
@@ -53,8 +53,8 @@ module.exports = (options) ->
                     # @TODO: log DEBUG
                     done e, []
 
-
         embed = ($el, json) ->
+            $el.addClass 'embedded embedly'
             switch
                 when json.html
                     $el[i].html json.html
@@ -93,9 +93,13 @@ module.exports = (options) ->
                     try embed $urlElements[i], jsonObj
                     switch jsonObj.type
                         when 'video'
-                            file.videos += 1
+                            file.videos.push jsonObj.url
                         when 'image'
-                            file.images += 1
+                            file.images.push jsonObj.url
+                        when 'link'
+                            file.links.push jsonObj.url
+                        when 'audio'
+                            file.audios.push jsonObj.url
                 done()
 
         externals = $('*')
