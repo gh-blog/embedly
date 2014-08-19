@@ -5,6 +5,8 @@ request = require 'request'
 _ = require 'lodash'
 
 # requires 'info'
+# @TODO: unify this regexp across all plugins
+externalRegExp = new RegExp '^((ftp|http)s?:)?//', 'i'
 
 module.exports = (options = { api_key: '' }) ->
     { api_key } = options
@@ -15,21 +17,22 @@ module.exports = (options = { api_key: '' }) ->
             isExternal = (i, el) ->
                 $el = $ el
                 url = $el.attr('href') || $el.attr('src')
-
-                if url and url.match /^http/i
+                if url and url.match externalRegExp
                     $el.data 'url', url
                     return yes
-                no
+                return no
 
             # @TODO check options...
             # @TODO fix this
             isEmbeddable = (i, el) ->
                 $el = $ el
-                url = $el.data 'url'
-                url and url.match /goodreads/gi
+                if $el.parent('p').text().trim() is $el.text().trim()
+                    url = $el.data 'url'
+                    return yes
+                return no
 
-            getOEmbed = (urls..., done) ->
-                return done null, [] if not urls.length
+            getOEmbed = (urls, callback) ->
+                return callback null, [] if not urls.length
                 # @TODO: iframely
                 # req =
                 #     url: "http://iframe.ly/api/oembed\
@@ -42,42 +45,20 @@ module.exports = (options = { api_key: '' }) ->
                     &format=json"
 
                 # @TODO DEBUG req.url
+                console.log '[embedly] urls', urls
 
                 request.get req, (err, res) ->
                     if err
                         # @TODO: log WARN
-                        return done err, []
+                        return callback err, []
                     try
                         jsonArray = JSON.parse res.body
-                        done null, jsonArray
+                        return callback null, jsonArray
                     catch e
                         # @TODO: log DEBUG
-                        done e, []
+                        return callback e, []
 
-            embed = ($el, json) ->
-                $el.addClass 'embedded embedly'
-                switch
-                    when json.html
-                        $el[i].html json.html
-                    else
-                        html = "
-                            <a href='${url}'>
-                            <img
-                                src='${thumbnail_url}'
-                                style='
-                                    width: {$thumbnail_width};
-                                    height: {$thumbnail_height};
-                                '
-                            />
-                            </a>
-                            <p>
-                                ${description}
-                            </p>
-                        "
-                        html = _.template html, json
-                        $el.html html
-
-            getEmbed = (externals, done) ->
+            getEmbed = (externals, callback) ->
                 $externals = $ externals
 
                 $urlElements = []
@@ -101,9 +82,31 @@ module.exports = (options = { api_key: '' }) ->
                                 file.links.push jsonObj.url
                             when 'audio'
                                 file.audios.push jsonObj.url
-                    done()
+                    callback()
 
-            externals = $('*')
+            embed = ($el, json) ->
+                if json.html
+                    html = json.html
+                else
+                    html = "
+                        <a href='${url}'>
+                        <img class='media-container'
+                            src='${thumbnail_url}'
+                            style='
+                                width: ${thumbnail_width};
+                                height: ${thumbnail_height};
+                            '
+                        />
+                        </a>
+                        <p>
+                            ${description}
+                        </p>
+                    "
+                    html = _.template html, json
+                $el.replaceWith $(html).addClass('embed embedded embedly')
+
+
+            externals = $('*:not(iframe):not(.embed)')
                 .filter(isExternal)
                 .filter(isEmbeddable).toArray()
 
