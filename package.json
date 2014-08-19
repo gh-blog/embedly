@@ -1,23 +1,23 @@
 {
-  "name": "pipelog-embedly",
+  "name": "gh-blog-embedly",
   "version": "0.0.0",
-  "description": "Pipelog plugin, detects embeddable links and replaces them with rich content using the Embedly API.",
+  "description": "gh-blog plugin, detects embeddable links and replaces them with rich content using the Embedly API.",
   "main": "index.js",
   "scripts": {
     "test": "node test"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/forabi/pipelog-embedly.git"
+    "url": "https://github.com/gh-blog/gh-blog-embedly.git"
   },
   "keywords": [
-    "pipelog-plugin",
+    "gh-blog-plugin",
     "embedly"
   ],
   "author": "Muhammad Fawwaz Orabi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/forabi/pipelog-embedly/issues"
+    "url": "https://github.com/gh-blog/gh-blog-embedly/issues"
   },
-  "homepage": "https://github.com/forabi/pipelog-embedly"
+  "homepage": "https://github.com/gh-blog/gh-blog-embedly"
 }
