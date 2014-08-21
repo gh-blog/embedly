@@ -2,7 +2,7 @@ through2 = require 'through2'
 marked = require 'marked'
 async = require 'async'
 request = require 'request'
-_ = require 'lodash'
+_ = template: require 'lodash.template'
 
 # requires 'info'
 # @TODO: unify this regexp across all plugins
@@ -89,15 +89,17 @@ module.exports = (options = { api_key: '' }) ->
                     html = json.html
                 else
                     html = "
-                        <a href='${url}'>
-                        <img class='media-container'
-                            src='${thumbnail_url}'
-                            style='
-                                width: ${thumbnail_width};
-                                height: ${thumbnail_height};
-                            '
-                        />
-                        </a>
+                        <div class='media-container'>
+                            <a href='${url}'>
+                                <img
+                                    src='${thumbnail_url}'
+                                    style='
+                                        width: ${thumbnail_width};
+                                        height: ${thumbnail_height};
+                                    '
+                                />
+                            </a>
+                        </div>
                         <p>
                             ${description}
                         </p>
