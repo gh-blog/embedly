@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gh-blog/gh-blog-embedly.git"
+    "url": "https://github.com/gh-blog/embedly"
   },
   "keywords": [
     "gh-blog-plugin",
@@ -17,9 +17,9 @@
   "author": "Muhammad Fawwaz Orabi",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gh-blog/gh-blog-embedly/issues"
+    "url": "https://github.com/gh-blog/embedly/issues"
   },
-  "homepage": "https://github.com/gh-blog/gh-blog-embedly",
+  "homepage": "https://github.com/gh-blog/embedly",
   "dependencies": {
     "async": "^0.9.0",
     "lodash.template": "^2.4.1",
