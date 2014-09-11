@@ -50,8 +50,10 @@ module.exports = (options = { api_key: '' }) ->
                 request.get req, (err, res) ->
                     if err
                         # @TODO: log WARN
+                        console.log '[embedly] request error', err
                         return callback err, []
                     try
+                        console.log '[embedly] response:', res
                         jsonArray = JSON.parse res.body
                         return callback null, jsonArray
                     catch e
