@@ -1,6 +1,6 @@
 {
   "name": "gh-blog-embedly",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "gh-blog plugin, detects embeddable links and replaces them with rich content using the Embedly API.",
   "main": "index.js",
   "scripts": {

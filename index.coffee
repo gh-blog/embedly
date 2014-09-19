@@ -45,15 +45,15 @@ module.exports = (options = { api_key: '' }) ->
                     &format=json"
 
                 # @TODO DEBUG req.url
-                console.log '[embedly] urls', urls
+                # console.log '[embedly] urls', urls
 
                 request.get req, (err, res) ->
                     if err
                         # @TODO: log WARN
-                        console.log '[embedly] request error', err
+                        # console.log '[embedly] request error', err
                         return callback err, []
                     try
-                        console.log '[embedly] response:', res
+                        # console.log '[embedly] response:', res
                         jsonArray = JSON.parse res.body
                         return callback null, jsonArray
                     catch e
